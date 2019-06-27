@@ -119,8 +119,17 @@ namespace SchedulerOptimizerEngine.UnitTest
 
             //assert
             table.Should().NotBeNull();
-            table.Items.Count.Should().Be(1);
-            table.Items.First().Discipline.Name.Should().Be("Matemática");
+            table.Items.Count.Should().Be(10);
+            table.Items[0].Discipline.Name.Should().Be("Matemática");
+            table.Items[1].Discipline.Name.Should().Be("Matemática");
+            table.Items[2].Discipline.Name.Should().Be("Matemática");
+            table.Items[3].Discipline.Name.Should().Be("Matemática");
+            table.Items[4].Discipline.Name.Should().Be("Português");
+            table.Items[5].Discipline.Name.Should().Be("Português");
+            table.Items[6].Discipline.Name.Should().Be("Português");
+            table.Items[7].Discipline.Name.Should().Be("Português");
+            table.Items[8].Discipline.Name.Should().Be("Física");
+            table.Items[9].Discipline.Name.Should().Be("Física");
             result.Should().BeFalse();
         }
     }
