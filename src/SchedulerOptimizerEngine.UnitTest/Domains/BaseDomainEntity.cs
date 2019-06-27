@@ -1,7 +1,13 @@
-﻿namespace SchedulerOptimizerEngine.UnitTest
+﻿using System;
+
+namespace SchedulerOptimizerEngine.UnitTest
 {
     public abstract class BaseDomainEntity
     {
-        public int Id { get; set; }
+        protected BaseDomainEntity()
+        {
+            Id = Guid.NewGuid();
+        }
+        public Guid Id { get; set; }
     }
 }

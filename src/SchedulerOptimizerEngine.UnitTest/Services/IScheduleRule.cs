@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-
 namespace SchedulerOptimizerEngine.UnitTest
 {
     public interface IScheduleRule
     {
-        IEnumerable<SchedulerItem> Apply(CourseClass courseClass);
+        SchedulerTable Table { get; set; }
+        void Apply(CourseClass courseClass, System.Collections.Generic.IEnumerable<InfrastructureResource> resources);
     }
 
 

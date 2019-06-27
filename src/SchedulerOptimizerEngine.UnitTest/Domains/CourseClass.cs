@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System;
 
 namespace SchedulerOptimizerEngine.UnitTest
 {
-    public class CourseClass
+    public class CourseClass : BaseDomainEntity
     {
         public CourseClass()
         {
@@ -18,6 +17,8 @@ namespace SchedulerOptimizerEngine.UnitTest
         public int Semester { get; set; }
 
         public string Level { get; set; }
+
+        public int NumberOfStudents { get; set; }
 
         public List<CourseClassDiscipline> Disciplines { get; internal set; }
 

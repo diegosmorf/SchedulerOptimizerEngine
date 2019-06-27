@@ -11,20 +11,16 @@ namespace SchedulerOptimizerEngine.UnitTest
         public DayOfWeek WeekDay { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
-        public bool IsAvailable { get; set; }
+        public bool IsAvailable { get; protected set; }
 
-        public SchedulerItem MakeReservation(CourseClassDiscipline courseClassDiscipline)
+        public void Allocate()
         {
             IsAvailable = false;
-            courseClassDiscipline.Quantity--;
+        }
 
-            return new SchedulerItem()
-            {
-                StartTime = StartTime,
-                EndTime = EndTime,
-                WeekDay = WeekDay,
-                Discipline = courseClassDiscipline.Discipline
-            };
+        public void Deallocate()
+        {
+            IsAvailable = true;
         }
     }
 }

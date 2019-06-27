@@ -5,26 +5,23 @@ namespace SchedulerOptimizerEngine.UnitTest
 {
     public class SimpleDisciplineRule : IScheduleRule
     {
-        public IEnumerable<SchedulerItem> Apply(CourseClass courseClass)
+        public SchedulerTable Table { get; set; }
+        public void Apply(CourseClass courseClass, IEnumerable<InfrastructureResource> resources)
         {
-            SchedulerTable table = new SchedulerTable();
-
             foreach (var courseClassDiscipline in courseClass.Disciplines)
             {
-                while (courseClassDiscipline.Quantity > 0 && courseClass.ScheduleSlots.Any(x => x.IsAvailable))
+                for (int i = 0; i < courseClassDiscipline.Quantity; i++)
                 {
-                    foreach (var slot in courseClass.ScheduleSlots)
+                    var item = Table.Items.FirstOrDefault(x =>
+                                x.CourseClass.Id == courseClass.Id
+                                && x.Discipline == null);
+
+                    if (item != null)
                     {
-                        if (slot.IsAvailable)
-                        {
-                            table.Items.Add(slot.MakeReservation(courseClassDiscipline));
-                            break;
-                        }
+                        item.Discipline = courseClassDiscipline.Discipline;
                     }
                 }
             }
-
-            return table.Items;
         }
     }
 }
