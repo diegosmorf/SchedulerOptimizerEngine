@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace SchedulerOptimizerEngine.UnitTest
 {
@@ -7,6 +8,7 @@ namespace SchedulerOptimizerEngine.UnitTest
         public CourseClass()
         {
             Disciplines = new List<CourseClassDiscipline>();
+            ScheduleSlots = new List<CourseClassScheduleSlot>();
         }
 
         public EducationSegment Segment { get; set; }
@@ -18,5 +20,7 @@ namespace SchedulerOptimizerEngine.UnitTest
         public string Level { get; set; }
 
         public List<CourseClassDiscipline> Disciplines { get; internal set; }
+
+        public List<CourseClassScheduleSlot> ScheduleSlots { get; internal set; }
     }
 }

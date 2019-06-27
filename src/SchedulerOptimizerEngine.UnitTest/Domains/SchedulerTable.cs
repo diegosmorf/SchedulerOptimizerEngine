@@ -8,6 +8,6 @@ namespace SchedulerOptimizerEngine.UnitTest
         {
             Items = new List<SchedulerItem>();
         }
-        public IEnumerable<SchedulerItem> Items { get; set; }
+        public List<SchedulerItem> Items { get; set; }
     }
 }

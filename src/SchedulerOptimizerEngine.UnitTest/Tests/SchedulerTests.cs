@@ -1,5 +1,6 @@
 using FluentAssertions;
 using NUnit.Framework;
+using System;
 using System.Linq;
 
 namespace SchedulerOptimizerEngine.UnitTest
@@ -19,7 +20,7 @@ namespace SchedulerOptimizerEngine.UnitTest
 
             //assert
             table.Should().NotBeNull();
-            table.Items.Count().Should().Be(courseClass.Disciplines.Count);
+            table.Items.Count.Should().Be(courseClass.Disciplines.Count);
         }
 
         [Test]
@@ -43,11 +44,16 @@ namespace SchedulerOptimizerEngine.UnitTest
         {
             //arrange
             var service = new SchedulerOptimzerService();
+            service.RegisterRule(new SimpleDisciplineRule());
 
             var courseClass = new CourseClass();
-            courseClass.Disciplines.Add(new CourseClassDiscipline("Matem�tica", 2));
-            courseClass.Disciplines.Add(new CourseClassDiscipline("Portugu�s", 1));
-            courseClass.Disciplines.Add(new CourseClassDiscipline("F�sica", 1));
+            courseClass.Disciplines.Add(new CourseClassDiscipline("Matemática", 1));
+            courseClass.Disciplines.Add(new CourseClassDiscipline("Português", 1));
+            courseClass.Disciplines.Add(new CourseClassDiscipline("Física", 1));
+
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Monday, StartTime = TimeSpan.FromHours(8), EndTime = TimeSpan.FromHours(9) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Monday, StartTime = TimeSpan.FromHours(10), EndTime = TimeSpan.FromHours(11) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Monday, StartTime = TimeSpan.FromHours(12), EndTime = TimeSpan.FromHours(13) });
 
             //act
             var table = service.GenerateCenario(courseClass);
@@ -55,9 +61,67 @@ namespace SchedulerOptimizerEngine.UnitTest
 
             //assert
             table.Should().NotBeNull();
-            table.Items.Count().Should().Be(courseClass.Disciplines.Count);
+            table.Items.Count.Should().Be(courseClass.Disciplines.Count);
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void WhenGenerateCenarioWith3DisciplineAnd1Slot_Then_ReturnScheduleListWith1Item()
+        {
+            //arrange
+            var service = new SchedulerOptimzerService();
+            service.RegisterRule(new SimpleDisciplineRule());
+
+            var courseClass = new CourseClass();
+            courseClass.Disciplines.Add(new CourseClassDiscipline("Matemática", 1));
+            courseClass.Disciplines.Add(new CourseClassDiscipline("Português", 1));
+            courseClass.Disciplines.Add(new CourseClassDiscipline("Física", 1));
+
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Monday, StartTime = TimeSpan.FromHours(8), EndTime = TimeSpan.FromHours(9) });
+
+            //act
+            var table = service.GenerateCenario(courseClass);
+            var result = service.HasConflicts(table);
+
+            //assert
+            table.Should().NotBeNull();
+            table.Items.Count.Should().Be(1);
+            table.Items.First().Discipline.Name.Should().Be("Matemática");
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void WhenGenerateCenarioWith10DisciplineAnd10Slots_Then_ReturnScheduleListWith10Item()
+        {
+            //arrange
+            var service = new SchedulerOptimzerService();
+            service.RegisterRule(new SimpleDisciplineRule());
+
+            var courseClass = new CourseClass();
+            courseClass.Disciplines.Add(new CourseClassDiscipline("Matemática", 4));
+            courseClass.Disciplines.Add(new CourseClassDiscipline("Português", 4));
+            courseClass.Disciplines.Add(new CourseClassDiscipline("Física", 2));
+
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Monday, StartTime = TimeSpan.FromHours(8), EndTime = TimeSpan.FromHours(9) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Monday, StartTime = TimeSpan.FromHours(10), EndTime = TimeSpan.FromHours(11) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Tuesday, StartTime = TimeSpan.FromHours(8), EndTime = TimeSpan.FromHours(9) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Tuesday, StartTime = TimeSpan.FromHours(10), EndTime = TimeSpan.FromHours(11) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Wednesday, StartTime = TimeSpan.FromHours(8), EndTime = TimeSpan.FromHours(9) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Wednesday, StartTime = TimeSpan.FromHours(10), EndTime = TimeSpan.FromHours(11) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Thursday, StartTime = TimeSpan.FromHours(8), EndTime = TimeSpan.FromHours(9) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Thursday, StartTime = TimeSpan.FromHours(10), EndTime = TimeSpan.FromHours(11) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Friday, StartTime = TimeSpan.FromHours(8), EndTime = TimeSpan.FromHours(9) });
+            courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Friday, StartTime = TimeSpan.FromHours(10), EndTime = TimeSpan.FromHours(11) });
+
+            //act
+            var table = service.GenerateCenario(courseClass);
+            var result = service.HasConflicts(table);
+
+            //assert
+            table.Should().NotBeNull();
+            table.Items.Count.Should().Be(1);
+            table.Items.First().Discipline.Name.Should().Be("Matemática");
             result.Should().BeFalse();
         }
     }
-
 }
