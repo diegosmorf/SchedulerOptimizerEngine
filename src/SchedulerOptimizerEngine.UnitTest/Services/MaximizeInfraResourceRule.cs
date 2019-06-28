@@ -3,11 +3,10 @@ using System.Linq;
 
 namespace SchedulerOptimizerEngine.UnitTest
 {
-
     public class MaximizeInfraResourceRule : IScheduleRule
     {
         public SchedulerTable Table { get; set; }
-        public void Apply(CourseClass courseClass, IEnumerable<InfrastructureResource> resources)
+        public void Apply(CourseClass courseClass, IEnumerable<InfrastructureResource> resources, IEnumerable<PersonaAvailability> personas)
         {
             foreach (var item in Table.Items.Where(x => x.CourseClass.Id == courseClass.Id && x.Resource == null))
             {

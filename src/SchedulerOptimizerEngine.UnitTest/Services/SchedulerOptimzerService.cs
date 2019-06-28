@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SchedulerOptimizerEngine.UnitTest
 {
@@ -18,17 +19,30 @@ namespace SchedulerOptimizerEngine.UnitTest
             rules.Add(rule);
         }
 
-        public SchedulerTable GenerateCenario(IEnumerable<CourseClass> courseClasses, IEnumerable<InfrastructureResource> resources)
+        public SchedulerTable GenerateCenario(IEnumerable<CourseClass> courseClasses, IEnumerable<InfrastructureResource> resources, IEnumerable<PersonaAvailability> personas)
         {
             foreach (var courseClass in courseClasses)
             {
-                GenerateCenario(courseClass, resources);
+                GenerateCenario(courseClass, resources, personas);
             }
 
             return table;
         }
 
-        public SchedulerTable GenerateCenario(CourseClass courseClass, IEnumerable<InfrastructureResource> resources)
+        public SchedulerTable GenerateCenario(CourseClass courseClass, IEnumerable<InfrastructureResource> resources, IEnumerable<PersonaAvailability> personas)
+        {
+            GenerateEmptyScheduleItems(courseClass);
+
+            foreach (var rule in rules)
+            {
+                rule.Table = table;
+                rule.Apply(courseClass, resources, personas);
+            }
+
+            return table;
+        }
+
+        private void GenerateEmptyScheduleItems(CourseClass courseClass)
         {
             foreach (var slot in courseClass.ScheduleSlots)
             {
@@ -45,18 +59,43 @@ namespace SchedulerOptimizerEngine.UnitTest
                     table.AddItem(item);
                 }
             }
-
-            foreach (var rule in rules)
-            {
-                rule.Table = table;
-                rule.Apply(courseClass, resources);
-            }
-
-            return table;
         }
 
-        public bool HasConflicts(SchedulerTable table)
+        public bool HasConflicts()
         {
+            if (table.Items.GroupBy(x => new
+            {
+                x.Resource?.Id,
+                x.WeekDay,
+                x.StartTime,
+                x.EndTime
+            }).Any(x => x.Count() > 1))
+            {
+                return true;
+            }
+
+            if (table.Items.GroupBy(x => new
+            {
+                x.Teacher?.Id,
+                x.WeekDay,
+                x.StartTime,
+                x.EndTime
+            }).Any(x => x.Count() > 1))
+            {
+                return true;
+            }
+
+            if (table.Items.GroupBy(x => new
+            {
+                x.Assistant?.Id,
+                x.WeekDay,
+                x.StartTime,
+                x.EndTime
+            }).Any(x => x.Count() > 1))
+            {
+                return true;
+            }
+
             return false;
         }
     }

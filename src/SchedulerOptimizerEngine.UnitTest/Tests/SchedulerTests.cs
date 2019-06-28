@@ -12,22 +12,24 @@ namespace SchedulerOptimizerEngine.UnitTest
         public void WhenGenerateThenCannotExistConflicts()
         {
             //arrange
+            var personas = new List<PersonaAvailability>();
             var resources = new List<InfrastructureResource>();
             var service = new SchedulerOptimzerService();
             var courseClass = new CourseClass();
 
             //act
-            var table = service.GenerateCenario(courseClass, resources);
-            var result = service.HasConflicts(table);
+            service.GenerateCenario(courseClass, resources, personas);
+            var hasConflicts = service.HasConflicts();
 
             //assert
-            result.Should().BeFalse();
+            hasConflicts.Should().BeFalse();
         }
 
         [Test]
         public void WhenGenerateWith3DisciplineThenReturnScheduleListWith3Items()
         {
             //arrange
+            var personas = new List<PersonaAvailability>();
             var resources = new List<InfrastructureResource>();
             var service = new SchedulerOptimzerService();
             service.RegisterRule(new SimpleDisciplineRule());
@@ -42,19 +44,20 @@ namespace SchedulerOptimizerEngine.UnitTest
             courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Monday, StartTime = TimeSpan.FromHours(12), EndTime = TimeSpan.FromHours(13) });
 
             //act
-            var table = service.GenerateCenario(courseClass, resources);
-            var result = service.HasConflicts(table);
+            var table = service.GenerateCenario(courseClass, resources, personas);
+            var hasConflicts = service.HasConflicts();
 
             //assert
             table.Should().NotBeNull();
             table.Items.Count().Should().Be(courseClass.Disciplines.Count);
-            result.Should().BeFalse();
+            hasConflicts.Should().BeFalse();
         }
 
         [Test]
         public void WhenGenerateWith3DisciplineAnd1SlotThenReturnScheduleListWith1Item()
         {
             //arrange
+            var personas = new List<PersonaAvailability>();
             var resources = new List<InfrastructureResource>();
             var service = new SchedulerOptimzerService();
             service.RegisterRule(new SimpleDisciplineRule());
@@ -67,20 +70,21 @@ namespace SchedulerOptimizerEngine.UnitTest
             courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Monday, StartTime = TimeSpan.FromHours(8), EndTime = TimeSpan.FromHours(9) });
 
             //act
-            var table = service.GenerateCenario(courseClass, resources);
-            var result = service.HasConflicts(table);
+            var table = service.GenerateCenario(courseClass, resources, personas);
+            var hasConflicts = service.HasConflicts();
 
             //assert
             table.Should().NotBeNull();
             table.Items.Count().Should().Be(1);
             table.Items.First().Discipline.Name.Should().Be("Matemática");
-            result.Should().BeFalse();
+            hasConflicts.Should().BeFalse();
         }
 
         [Test]
         public void WhenGenerateWith10DisciplineAnd10SlotsThenReturnScheduleListWith10Item()
         {
             //arrange
+            var personas = new List<PersonaAvailability>();
             var resources = new List<InfrastructureResource>();
             var service = new SchedulerOptimzerService();
             service.RegisterRule(new SimpleDisciplineRule());
@@ -102,8 +106,8 @@ namespace SchedulerOptimizerEngine.UnitTest
             courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Friday, StartTime = TimeSpan.FromHours(10), EndTime = TimeSpan.FromHours(11) });
 
             //act
-            var table = service.GenerateCenario(courseClass, resources);
-            var result = service.HasConflicts(table);
+            var table = service.GenerateCenario(courseClass, resources, personas);
+            var hasConflicts = service.HasConflicts();
 
             //assert
             table.Should().NotBeNull();
@@ -119,13 +123,14 @@ namespace SchedulerOptimizerEngine.UnitTest
             ((List<SchedulerItem>)table.Items)[7].Discipline.Name.Should().Be("Português");
             ((List<SchedulerItem>)table.Items)[8].Discipline.Name.Should().Be("Física");
             ((List<SchedulerItem>)table.Items)[9].Discipline.Name.Should().Be("Física");
-            result.Should().BeFalse();
+            hasConflicts.Should().BeFalse();
         }
 
         [Test]
         public void WhenGenerateWith1ResourceThenScheduleList10()
         {
             //arrange
+            var personas = new List<PersonaAvailability>();
             var resources = new List<InfrastructureResource>();
             resources.Add(new InfrastructureResource
             {
@@ -168,8 +173,8 @@ namespace SchedulerOptimizerEngine.UnitTest
             courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Friday, StartTime = TimeSpan.FromHours(10), EndTime = TimeSpan.FromHours(11) });
 
             //act
-            var table = service.GenerateCenario(courseClass, resources);
-            var result = service.HasConflicts(table);
+            var table = service.GenerateCenario(courseClass, resources, personas);
+            var hasConflicts = service.HasConflicts();
 
             //assert
             table.Should().NotBeNull();
@@ -181,13 +186,14 @@ namespace SchedulerOptimizerEngine.UnitTest
                 item.Resource.Should().NotBeNull();
             }
 
-            result.Should().BeFalse();
+            hasConflicts.Should().BeFalse();
         }
 
         [Test]
         public void WhenGenerateOnlyResourceRuleThenScheduleList10()
         {
             //arrange
+            var personas = new List<PersonaAvailability>();
             var resources = new List<InfrastructureResource>();
             resources.Add(new InfrastructureResource
             {
@@ -229,8 +235,8 @@ namespace SchedulerOptimizerEngine.UnitTest
             courseClass.ScheduleSlots.Add(new CourseClassScheduleSlot() { WeekDay = DayOfWeek.Friday, StartTime = TimeSpan.FromHours(10), EndTime = TimeSpan.FromHours(11) });
 
             //act
-            var table = service.GenerateCenario(courseClass, resources);
-            var result = service.HasConflicts(table);
+            var table = service.GenerateCenario(courseClass, resources, personas);
+            var hasConflicts = service.HasConflicts();
 
             //assert
             table.Should().NotBeNull();
@@ -242,7 +248,7 @@ namespace SchedulerOptimizerEngine.UnitTest
                 item.Resource.Should().NotBeNull();
             }
 
-            result.Should().BeFalse();
+            hasConflicts.Should().BeFalse();
         }
     }
 }

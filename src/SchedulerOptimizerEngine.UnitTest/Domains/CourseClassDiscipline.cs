@@ -10,5 +10,6 @@
         }
         public Discipline Discipline { get; set; }
         public int Quantity { get; set; }
+        public int Priority { get; set; }
     }
 }

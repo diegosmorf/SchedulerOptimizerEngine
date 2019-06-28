@@ -6,9 +6,9 @@ namespace SchedulerOptimizerEngine.UnitTest
     public class SimpleDisciplineRule : IScheduleRule
     {
         public SchedulerTable Table { get; set; }
-        public void Apply(CourseClass courseClass, IEnumerable<InfrastructureResource> resources)
+        public void Apply(CourseClass courseClass, IEnumerable<InfrastructureResource> resources, IEnumerable<PersonaAvailability> personas)
         {
-            foreach (var courseClassDiscipline in courseClass.Disciplines)
+            foreach (var courseClassDiscipline in courseClass.Disciplines.OrderBy(x => x.Priority))
             {
                 for (int i = 0; i < courseClassDiscipline.Quantity; i++)
                 {
