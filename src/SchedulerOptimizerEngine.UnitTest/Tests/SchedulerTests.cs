@@ -1,7 +1,10 @@
 using FluentAssertions;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using SchedulerOptimizerEngine.UnitTest.Tests.Factories;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace SchedulerOptimizerEngine.UnitTest
@@ -14,7 +17,7 @@ namespace SchedulerOptimizerEngine.UnitTest
             //arrange
             var personas = new List<PersonaAvailability>();
             var resources = new List<InfrastructureResource>();
-            var service = new SchedulerOptimzerService();
+            var service = new SchedulerOptimizerService();
             var courseClass = new CourseClass();
 
             //act
@@ -31,7 +34,7 @@ namespace SchedulerOptimizerEngine.UnitTest
             //arrange
             var personas = new List<PersonaAvailability>();
             var resources = new List<InfrastructureResource>();
-            var service = new SchedulerOptimzerService();
+            var service = new SchedulerOptimizerService();
             service.RegisterRule(new SimpleDisciplineRule());
 
             var courseClass = new CourseClass();
@@ -59,7 +62,7 @@ namespace SchedulerOptimizerEngine.UnitTest
             //arrange
             var personas = new List<PersonaAvailability>();
             var resources = new List<InfrastructureResource>();
-            var service = new SchedulerOptimzerService();
+            var service = new SchedulerOptimizerService();
             service.RegisterRule(new SimpleDisciplineRule());
 
             var courseClass = new CourseClass();
@@ -86,7 +89,7 @@ namespace SchedulerOptimizerEngine.UnitTest
             //arrange
             var personas = new List<PersonaAvailability>();
             var resources = new List<InfrastructureResource>();
-            var service = new SchedulerOptimzerService();
+            var service = new SchedulerOptimizerService();
             service.RegisterRule(new SimpleDisciplineRule());
 
             var courseClass = new CourseClass();
@@ -135,7 +138,7 @@ namespace SchedulerOptimizerEngine.UnitTest
             resources.Add(new InfrastructureResource
             {
                 Name = "Sala 1",
-                Type = InfrastructureResourceType.Room,
+                Type = InfrastructureResourceType.ClassRoom,
                 MaxCapacity = 50,
                 Building = new CampusBuilding
                 {
@@ -143,7 +146,7 @@ namespace SchedulerOptimizerEngine.UnitTest
                     Campus = new Campus
                     {
                         Name = "Santo André",
-                        Institue = new EducationInstitue
+                        Institue = new EducationInstitute
                         {
                             Name = "Vereda Educação"
                         }
@@ -151,7 +154,7 @@ namespace SchedulerOptimizerEngine.UnitTest
                 }
             });
 
-            var service = new SchedulerOptimzerService();
+            var service = new SchedulerOptimizerService();
             service.RegisterRule(new SimpleDisciplineRule());
             service.RegisterRule(new MaximizeInfraResourceRule());
 
@@ -198,7 +201,7 @@ namespace SchedulerOptimizerEngine.UnitTest
             resources.Add(new InfrastructureResource
             {
                 Name = "Sala 1",
-                Type = InfrastructureResourceType.Room,
+                Type = InfrastructureResourceType.ClassRoom,
                 MaxCapacity = 50,
                 Building = new CampusBuilding
                 {
@@ -206,7 +209,7 @@ namespace SchedulerOptimizerEngine.UnitTest
                     Campus = new Campus
                     {
                         Name = "Santo André",
-                        Institue = new EducationInstitue
+                        Institue = new EducationInstitute
                         {
                             Name = "Vereda Educação"
                         }
@@ -214,7 +217,7 @@ namespace SchedulerOptimizerEngine.UnitTest
                 }
             });
 
-            var service = new SchedulerOptimzerService();
+            var service = new SchedulerOptimizerService();
             service.RegisterRule(new MaximizeInfraResourceRule());
 
             var courseClass = new CourseClass();
@@ -249,6 +252,30 @@ namespace SchedulerOptimizerEngine.UnitTest
             }
 
             hasConflicts.Should().BeFalse();
+        }
+
+
+        [Test(Description = "Executando teste com grade real e todas as regras ")]
+        public void OpmitizeRealScenarioTest1()
+        {
+            //arrange
+            var personas = new PersonaAvailabilityFactory().Create();
+            var resources = new InfraResourceClassFactory().Create();
+
+            var service = new SchedulerOptimizerService();
+            service.RegisterRule(new SimpleDisciplineRule());
+            service.RegisterRule(new MaximizeInfraResourceRule());
+            service.RegisterRule(new MaximizeTeacherMonthlyRule());
+
+            var courseClasses = new CourseClassFactory().Create();
+            //act
+            var table = service.GenerateCenario(courseClasses.Take(5), resources, personas);
+
+
+            File.WriteAllText("result.json", JsonConvert.SerializeObject(table));
+
+            //assert
+            table.Should().NotBeNull();
         }
     }
 }

@@ -12,7 +12,6 @@ namespace SchedulerOptimizerEngine.UnitTest
 
         public bool AddItem(SchedulerItem item)
         {
-
             ((List<SchedulerItem>)Items).Add(item);
 
             return true;

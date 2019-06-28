@@ -1,15 +1,18 @@
 ﻿namespace SchedulerOptimizerEngine.UnitTest
 {
-
     public enum InfrastructureResourceType
     {
-        Room,
-        SportCourt,
+        ClassRoom,
+        OpenSportCourt,
+        CloseSportCourt,
         SwimmingPool,
         FoodCourt,
         Library,
-        MusicRoom,
+        ArtMusicRoom,
         Gym,
-        OpenCourtyard
+        CloseCourtyard,
+        OpenCourtyard,
+        SciencyLab,
+        MakerLab
     }
 }

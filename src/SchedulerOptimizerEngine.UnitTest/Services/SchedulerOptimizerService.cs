@@ -3,12 +3,12 @@ using System.Linq;
 
 namespace SchedulerOptimizerEngine.UnitTest
 {
-    public class SchedulerOptimzerService
+    public class SchedulerOptimizerService
     {
         private readonly List<IScheduleRule> rules;
         private readonly SchedulerTable table;
 
-        public SchedulerOptimzerService()
+        public SchedulerOptimizerService()
         {
             rules = new List<IScheduleRule>();
             table = new SchedulerTable();
@@ -85,16 +85,16 @@ namespace SchedulerOptimizerEngine.UnitTest
                 return true;
             }
 
-            if (table.Items.GroupBy(x => new
-            {
-                x.Assistant?.Id,
-                x.WeekDay,
-                x.StartTime,
-                x.EndTime
-            }).Any(x => x.Count() > 1))
-            {
-                return true;
-            }
+            //if (table.Items.GroupBy(x => new
+            //{
+            //    x.Assistant?.Id,
+            //    x.WeekDay,
+            //    x.StartTime,
+            //    x.EndTime
+            //}).Any(x => x.Count() > 1))
+            //{
+            //    return true;
+            //}
 
             return false;
         }

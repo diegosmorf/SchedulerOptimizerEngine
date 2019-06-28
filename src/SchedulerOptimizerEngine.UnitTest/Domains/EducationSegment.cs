@@ -4,6 +4,6 @@
     public class EducationSegment : BaseDomainEntity
     {
         public string Name { get; set; }
-        public EducationInstitue Institute { get; set; }
+        public EducationInstitute Institute { get; set; }
     }
 }

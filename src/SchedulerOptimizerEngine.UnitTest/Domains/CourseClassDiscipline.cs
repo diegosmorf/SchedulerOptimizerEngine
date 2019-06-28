@@ -3,6 +3,10 @@
 
     public class CourseClassDiscipline : BaseDomainEntity
     {
+        public CourseClassDiscipline()
+        {
+        }
+
         public CourseClassDiscipline(string name, int quantity)
         {
             Discipline = new Discipline { Name = name };

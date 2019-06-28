@@ -1,7 +1,6 @@
 ﻿namespace SchedulerOptimizerEngine.UnitTest
 {
-
-    public class EducationInstitue : BaseDomainEntity
+    public class EducationInstitute : BaseDomainEntity
     {
         public string Name { get; set; }
     }
